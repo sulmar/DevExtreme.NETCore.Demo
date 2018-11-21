@@ -1,29 +1,94 @@
-@using DevExtreme_NETCore_Demo.Models
+@model DevExtreme_NETCore_Demo.Models.Company
 
-<h2>Home</h2>
+<div id="form-demo">
+    <div class="widget-container">
 
-@(Html.DevExtreme().DataGrid<Order>()
-    .ShowBorders(true)
-    .DataSource(d => d.Mvc().Controller("Orders").LoadAction("Get").Key("OrderID"))
-    .Columns(columns => {
-        columns.AddFor(m => m.OrderID);
-        columns.AddFor(m => m.OrderDate);
-        columns.AddFor(m => m.CustomerName);
-        columns.AddFor(m => m.ShipCountry);
-        columns.AddFor(m => m.ShipCity);
-    })
-    .Paging(p => p.PageSize(10))
-    .FilterRow(f => f.Visible(true))
-    .HeaderFilter(f => f.Visible(true))
-    .GroupPanel(p => p.Visible(true))
-    .Grouping(g => g.AutoExpandAll(false))
-    .RemoteOperations(true)
-    .Summary(s => s
-        .TotalItems(totalItems => {
-            totalItems.AddFor(m => m.ShipCity).SummaryType(SummaryType.Count);
-        })
-        .GroupItems(groupItems => {
-            groupItems.Add().SummaryType(SummaryType.Count);
-        })
-    )
-)
+        <div>Select company:</div>
+
+        @using (Html.BeginForm("Index", "Home"))
+        {
+            @using (Html.DevExtreme().ValidationGroup())
+            {
+                @Html.AntiForgeryToken()
+
+                @*@(Html.DevExtreme().SelectBox()
+                        .DisplayExpr("Name")
+                        .DataSource(d => d.Mvc().LoadAction("GetCompanies").Key("ID"))
+                        .Value(Model.ID)
+                        .OnValueChanged("selectBox_valueChanged")
+                )*@
+
+
+                @(Html.DevExtreme().Form<DevExtreme_NETCore_Demo.Models.Company>()
+                    .ID("form")
+                    .FormData(Model)
+                    .LabelLocation(FormLabelLocation.Top)
+                    .MinColWidth(300)
+                    .ReadOnly(false)
+                    .ShowColonAfterLabel(true)
+                    .Items(items => {
+                        items.AddSimple().Editor(e => e.SelectBox().DisplayExpr("Name")
+                              .DataSource(d => d.Mvc().LoadAction("GetCompanies").Key("ID"))
+                              .Value(Model.ID)
+                              .OnValueChanged("selectBox_valueChanged"));
+                        items.AddSimpleFor(m => m.ID);
+                        items.AddSimpleFor(m => m.Name);
+                        items.AddSimpleFor(m => m.Address);
+                        items.AddSimpleFor(m => m.City);
+                        items.AddSimpleFor(m => m.State);
+                        items.AddSimpleFor(m => m.ZipCode);
+                        items.AddSimpleFor(m => m.Phone);
+                        items.AddSimpleFor(m => m.Fax);
+                        items.AddSimpleFor(m => m.Website);
+                    }
+                    )
+
+                    )
+
+                @(Html.DevExtreme().Button()
+                        .Text("Save")
+                        .Type(ButtonType.Success)
+                        .UseSubmitBehavior(true))
+            }
+        }
+
+    </div>
+
+  
+
+  
+</div>
+
+<script>
+    function getFormInstance() {
+        return $("#form").dxForm("instance");
+    }
+
+    function selectBox_valueChanged(data) {
+        getFormInstance().option("formData", data.value);
+    }
+
+    function labelLocation_changed(data) {
+        getFormInstance().option("labelLocation", data.value);
+    }
+
+    function colCount_changed(data) {
+        getFormInstance().option("colCount", data.value);
+    }
+
+    function minColWidth_changed(data) {
+        getFormInstance().option("minColWidth", data.value);
+    }
+
+    function formWidth_changed(data) {
+        getFormInstance().option("width", data.value);
+    }
+
+    function readOnly_changed(data) {
+        getFormInstance().option("readOnly", data.value);
+    }
+
+    function showColonAfterLabel_changed(data) {
+        getFormInstance().option("showColonAfterLabel", data.value);
+    }
+</script>

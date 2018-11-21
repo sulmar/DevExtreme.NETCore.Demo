@@ -13,4 +13,6 @@ namespace DevExtreme_NETCore_Demo.Models {
         public string ShipCountry { get; set; }
         public string ShipCity { get; set; }
     }
+
+   
 }
